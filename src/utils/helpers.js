@@ -1,4 +1,9 @@
+import moment from 'moment-timezone'
 import { mockTransactions } from "../__mock__/mockTransactions";
+
+export const formatDisplayDate = (date) =>
+  moment(date, 'YYYY-MM-DD').format('MM/DD/YY')
+
 export function configureFakeBackend() {
     let realFetch = window.fetch;
     window.fetch = function (url, opts) {
@@ -37,3 +42,29 @@ export function configureFakeBackend() {
         });
     }
 }
+
+export const calculateRewards = (amount) => {
+    if( amount > 100 ) {
+        return ( amount % 100 ) * 2 + 50;
+    } else if(amount > 50) {
+        return amount % 50;
+    }
+    return 0;
+}
+
+export const totalRewards = (data) => {
+    console.log(data)
+    let total = 0;
+    for(let d of data) {
+        total += calculateRewards(d.amount)
+    }
+    return total;
+}
+
+export const formatMoney = (v) => {
+    if (!v) return '-'
+    return `$${Number(v)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`
+}
+  
